@@ -1,0 +1,62 @@
+<RCC>
+    <qresource prefix="/sysButton">
+        <file alias="close">Resources/sys/close.png</file>
+        <file alias="close_enter">Resources/sys/close_enter.png</file>
+        <file alias="close_pressed">Resources/sys/close_pressed.png</file>
+        <file alias="min">Resources/sys/min.png</file>
+        <file alias="min_enter">Resources/sys/min_enter.png</file>
+        <file alias="min_pressed">Resources/sys/min_pressed.png</file>
+        <file alias="arrow">Resources/sys/arrow.png</file>
+        <file alias="carve">Resources/sys/carve.png</file>
+        <file alias="list">Resources/sys/list.png</file>
+        <file alias="turnImage">Resources/sys/turnImage.png</file>
+        <file alias="arrowLeft">Resources/sys/arrowLeft.png</file>
+        <file alias="arrowright">Resources/sys/arrowRight.png</file>
+    </qresource>
+    <qresource prefix="/sys">
+        <file alias="Logo">Resources/sys/Icon.png</file>
+        <file alias="UserBeforeLogin">Resources/sys/User.png</file>
+        <file alias="UserAfterLogin">Resources/sys/User2.png</file>
+        <file alias="Alert">Resources/Alert.png</file>
+        <file alias="Pause">Resources/Pause.png</file>
+        <file alias="Pause1">Resources/Pause1.png</file>
+        <file alias="Light.svg">Resources/sys/Light.svg</file>
+        <file alias="Light.png">Resources/sys/Light.png</file>
+    </qresource>
+    <qresource prefix="/loading">
+        <file>Resources/loading.png</file>
+        <file alias="loading">Resources/loading2.png</file>
+    </qresource>
+    <qresource prefix="/flags">
+        <file>Resources/Flags/China.png</file>
+        <file>Resources/Flags/England.png</file>
+    </qresource>
+    <qresource prefix="/pushButton">
+        <file alias="following_enter">Resources/pushbotton/following_enter.png</file>
+        <file alias="following_pressed">Resources/pushbotton/following_press.png</file>
+        <file alias="previous_enter">Resources/pushbotton/previos_enter.png</file>
+        <file alias="previous_pressed">Resources/pushbotton/previous_press.png</file>
+        <file alias="startShow_enter">Resources/pushbotton/startshow_enter.png</file>
+        <file alias="startShow_pressed">Resources/pushbotton/startshow_press.png</file>
+        <file alias="following">Resources/pushbotton/following.png</file>
+        <file alias="previous">Resources/pushbotton/previos.png</file>
+        <file alias="startShow">Resources/pushbotton/startshow.png</file>
+        <file alias="stopShow">Resources/pushbotton/stopshow.png</file>
+        <file alias="stopShow_enter">Resources/pushbotton/stopshow_enter.png</file>
+        <file alias="stopShow_pressed">Resources/pushbotton/stopshow_press.png</file>
+    </qresource>
+    <qresource prefix="/qss">
+        <file alias="ILDR.qss">Resources/qss/ILDR.qss</file>
+    </qresource>
+    <qresource prefix="/toolButton">
+        <file alias="Operation">Resources/toolwidget/Operation.png</file>
+        <file alias="Settings">Resources/toolwidget/Settings.png</file>
+        <file alias="Alarm">Resources/toolwidget/Alarm.png</file>
+        <file alias="History">Resources/toolwidget/History.png</file>
+        <file alias="InOut">Resources/toolwidget/InOut.png</file>
+        <file alias="Light">Resources/toolwidget/Light.png</file>
+        <file alias="Lock">Resources/toolwidget/Lock.png</file>
+        <file alias="Unlock">Resources/toolwidget/Unlock.png</file>
+        <file alias="Reset">Resources/toolwidget/Reset.png</file>
+    </qresource>
+</RCC>

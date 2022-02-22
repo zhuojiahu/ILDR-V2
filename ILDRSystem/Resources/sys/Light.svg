@@ -1,0 +1,5 @@
+<?xml version="1.0" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768">
+<path style="fill:#fbf7f7; stroke:none;" d="M0 0L0 384L1024 384L1024 0L0 0z"/>
+<path style="fill:#010101; stroke:none;" d="M0 384L0 768L1024 768L1024 384L0 384z"/>
+</svg>
