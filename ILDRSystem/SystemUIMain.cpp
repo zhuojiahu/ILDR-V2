@@ -84,7 +84,7 @@ void SystemUIMain::Init()
     //设置初始状态
     bLock = true;
     emit signals_setNaviLockSt(bLock);
-    emit signals_turnPage(ENaviPageOperation);
+    slots_NaviOperation(ENaviPageOperation);
 }
 
 //初始化界面

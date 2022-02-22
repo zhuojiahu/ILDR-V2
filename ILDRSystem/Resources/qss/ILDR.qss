@@ -1,7 +1,9 @@
 SystemUIMain{
     background:qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(110, 110, 110, 255), stop:0.3 rgba(180, 180, 180, 255),stop:1 rgba(110, 110, 110, 255)); 
 }
-
+NavigationWidget{
+	background:red; 
+}
 QStackedWidget{
 	background:rgb(120,240,128,70); 
 } 
@@ -10,9 +12,6 @@ CDlgMainWindow{
 }
 DHBaseWidget{
 	background:rgb(90,90,90,120);
-}
-WidgetPie{
-	background:rgb(90,90,90,120); 
 }
 QWidget#widget_alg{
 	background:transparent; 
@@ -26,13 +25,6 @@ QTableView{
 QMainWindow{
 	background:gray; 
 } 
-CMyLogText{
-	background-color:rgb(255,255,255,100); 
-	border-radius:10px;
-	border: 1px groove gray;
-	border-style: inset;
-	font: 12pt "Arial Unicode MS";
-}
 QSplitter{
 	color:gray;
 }
@@ -45,8 +37,5 @@ QToolButton{
 	background:transparent;
 } 
 QLabel#whiteLabel{
-	color:white;
-}
-QwtTextLabel{
 	color:white;
 }
