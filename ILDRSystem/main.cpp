@@ -5,88 +5,177 @@
 #include <QTranslator>
 #include <QSettings>
 #include <QMessageBox>
-#include <QFile>
 
-#include "qt_windows.h"
-//QTÊ£ÄÊµãÂÜÖÂ≠òÊ≥ÑÊºèÂ§¥Êñá‰ª∂
+//QTœµÕ≥¿‡–Õ
+#define DAHENGBLPKP_QT			//QTœµÕ≥ ±∂®“Â∏√¿‡–Õ£¨∑Ò‘Ú◊¢ ÕµÙ
+#include "ILDRSystem.h"
+#include "clogfile.h"
+//QTºÏ≤‚ƒ⁄¥Ê–π¬©Õ∑Œƒº˛
 #include "setDebugNew.h"
-#include "reportingHook.h"
-
-#define _CRTDBG_MAP_ALLOC 
 #include <crtdbg.h>
+#define _CRTDBG_MAP_ALLOC 
+
 #include "winuser.h"
 #include "tlhelp32.h"
 #include "tchar.h"
 #include <DbgHelp.h>
 #pragma comment(lib,"Dbghelp.lib")
-
-#include "SystemUIMain.h"
-
 static long  __stdcall CrashInfocallback(_EXCEPTION_POINTERS *pexcp);
+
+//πÿ±’Õ¨√˚À¿Ω¯≥Ã
+void KillSameDeathProcess(QString exestr)
+{
+	HANDLE handle;
+	HANDLE handle1;
+	handle=CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
+	PROCESSENTRY32 *info; 
+
+	info=new PROCESSENTRY32;  
+	info->dwSize=sizeof(PROCESSENTRY32); 
+
+	Process32First(handle,info); 
+
+	do
+	{
+		QString str = QString::fromWCharArray(info->szExeFile);
+		if(exestr==str) 		
+		{ 
+			handle1=OpenProcess(PROCESS_TERMINATE,FALSE,info->th32ProcessID);
+			TerminateProcess(handle1,0); 			
+		}
+	}while (Process32Next(handle,info)!=FALSE); 
+	CloseHandle(handle); 
+}
+
+//Ωˆ‘À––“ª¥Œ
+bool OnlyRunOnce(QString qstr,QString qstrext)
+{
+	HANDLE hMapping = ::CreateFileMapping((HANDLE)INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, 16, qstr.utf16());
+	if (hMapping == NULL)
+	{
+		return false;
+	}
+	else
+	{
+		if(GetLastError()==ERROR_ALREADY_EXISTS)
+		{
+			HWND hRecv = NULL;
+			hRecv = ::FindWindow(NULL,qstr.utf16());
+			//hRecv = ::FindWindow(NULL,QString("GlassDetectSystem").utf16());
+			if (hRecv != NULL)
+			{
+				//Qt Œﬁ∑®ªÒ»°∏√±Íº«£¨‘≠“ÚŒ¥÷™£¨Ω˚÷π◊Ó–°ªØ
+				//if (::IsIconic(hRecv))
+				//	::ShowWindow(hRecv,SW_SHOWNORMAL);
+				//::ShowWindow(hRecv,SW_MAXIMIZE);
+				//::SetForegroundWindow(hRecv);
+				::BringWindowToTop(hRecv);
+			}
+			else
+			{
+				//KillSameDeathProcess(qstrext);
+            }
+            return false;
+		}
+	}
+	return true;
+}
 
 int main(int argc, char *argv[])
 {
+	::SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)CrashInfocallback);
+	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
     int nResult = -1;
     {
-        ::SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)CrashInfocallback);
-        _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-        QApplication a(argc, argv);
-        //Èò≤Ê≠¢ÂõæÊ†á‰∏çÊòæÁ§∫
-        a.addLibraryPath("./QtPlugins/");
+	    QApplication a(argc, argv);
+	    //…Ë÷√πÃ∂®∑Á∏Ò£¨≤ª∏˙ÀÊœµÕ≥±‰ªØ∂¯±‰ªØ
+	    //QApplication::setStyle("plastique");
+	    //∑¿÷πÕº±Í≤ªœ‘ æ
+	    QApplication::addLibraryPath("./QtPlugins");
+	    //∑¿÷π÷–Œƒ¬“¬Î
+    // 	a.addLibraryPath("plugins/codecs/");
+	    QTextCodec *codec = QTextCodec::codecForName("GBK"); 
+	    QTextCodec::setCodecForLocale(codec); 
+	    QTextCodec::setCodecForTr(codec);
+	    QTextCodec::setCodecForCStrings(codec);	
 
-        QSharedMemory shared_memory("VEXI/ILDR");            
-        if(shared_memory.attach())   //Â∞ùËØïÂ∞ÜËøõÁ®ãÈôÑÂä†Âà∞ËØ•ÂÖ±‰∫´ÂÜÖÂ≠òÊÆµ
+        QTranslator translator;
+        QSettings setTranslation(".\\Config\\Config.ini",QSettings::IniFormat);
+        setTranslation.setIniCodec(QTextCodec::codecForName("GBK"));
+
+        int iLanguage = setTranslation.value("/system/Language",0).toInt();//	m_sErrorInfo.m_iErrorTypeCount = erroriniset.value(strSession,0).toInt();
+        if (0 == iLanguage)
         {
-            QMessageBox::information(nullptr, QString::fromLocal8Bit("ÈîôËØØ"), QString::fromLocal8Bit("Á®ãÂ∫èÂ∑≤ÁªèËøêË°å,ËØ∑‰∏çË¶ÅÂ§öÂºÄÂÆû‰æã!"),QString::fromLocal8Bit("Á°ÆËÆ§"));
-            //        QMessageBox::information(nullptr, QObject::tr("Error"), QObject::tr("this Counter has opened, Please don't run multi-instance!"), QObject::tr("OK"));
-            return -1;   
+            translator.load(".\\ILDRSystem_zh.qm");
+            a.installTranslator(&translator);
         }
-        shared_memory.create(1);
 
-        //Âä†ËΩΩQSSÊ†∑ÂºèË°®
-        QFile qss(":/qss/ILDR.qss");
-        qss.open(QFile::ReadOnly);
-        qApp->setStyleSheet(qss.readAll());
-        qss.close();
-    
-        QString strLoading = ":/loading/loading"; 
-        QSplashScreen spLoading(QPixmap(strLoading.toLocal8Bit().constData()));
-        spLoading.show();
-        SystemUIMain w;
-        w.showMaximized();
-        w.activateWindow();
-        spLoading.finish(&w);
-        nResult = a.exec();
+	    //÷¥––Œƒº˛√˚≥∆+¿©’π√˚
+	    QString exepath = argv[0];
+	    QString exenameext = exepath.right(exepath.length()-exepath.findRev("\\")-1);
+	    QString apppath = exepath.left(exepath.findRev("\\")+1);
+	    QString exename = exenameext.left(exenameext.findRev("."));
+        QString t = exepath.replace('\\', '/');
+	    //÷ª‘À––“ª∏ˆ µ¿˝
+	    if (!OnlyRunOnce(t,exenameext))
+	    {
+		    QMessageBox::information(NULL,QObject::tr("System Prompted"),QObject::tr("Can not run multiple instance!"));//œµÕ≥Ã· æ£∫œµÕ≥“—æ≠‘À––£¨Œﬁ∑®÷ÿ∏¥¥Úø™£°	
+		    return 0;
+	    }
+	    //º”‘ÿQSS—˘ Ω±Ì
+	    QFile qss(".\\GlasswareDetect.qss");
+	    qss.open(QFile::ReadOnly);
+ 	    qApp->setStyleSheet(qss.readAll());
+	    qss.close();
+
+	    QString strLoading = ":/loading/loading";
+	    QSplashScreen spLoading(QPixmap(strLoading.toLocal8Bit().constData()));
+	    spLoading.show();
+
+	    SysMainUI w;
+	    w.SetLanguage(iLanguage);
+	    //º”√‹π∑
+	    w.Init();
+	    bool bReturn = w.CheckLicense();
+	    if(!bReturn)
+		    return false;
+	    w.showMaximized();
+	    w.raise();//∑≈µΩ◊Ó…œ
+	    w.activateWindow();
+	    spLoading.finish(&w);
+	    nResult = a.exec();
     }
-    return nResult; 
+    CLogFile* plog = CLogFile::getInstance();
+    delete plog;
+	return nResult; 
 }
 
 long  __stdcall CrashInfocallback( _EXCEPTION_POINTERS *pexcp)
 {
-    HANDLE hDumpFile = ::CreateFile(
-        L"MEMORY.DMP",
-        GENERIC_WRITE,
-        0,
-        NULL,
-        CREATE_ALWAYS,
-        FILE_ATTRIBUTE_NORMAL,
-        NULL
-        );
-    if( hDumpFile != INVALID_HANDLE_VALUE)
-    {
-        MINIDUMP_EXCEPTION_INFORMATION dumpInfo;
-        dumpInfo.ExceptionPointers = pexcp;
-        dumpInfo.ThreadId = ::GetCurrentThreadId();
-        dumpInfo.ClientPointers = TRUE;
-        ::MiniDumpWriteDump(
-            ::GetCurrentProcess(),
-            ::GetCurrentProcessId(),
-            hDumpFile,
-            MiniDumpNormal,
-            &dumpInfo,
-            NULL,
-            NULL
-            );
-    }
-    return 0;
+	HANDLE hDumpFile = ::CreateFile(
+		L"MEMORY.DMP",
+		GENERIC_WRITE,
+		0,
+		NULL,
+		CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL
+		);
+	if( hDumpFile != INVALID_HANDLE_VALUE)
+	{
+		MINIDUMP_EXCEPTION_INFORMATION dumpInfo;
+		dumpInfo.ExceptionPointers = pexcp;
+		dumpInfo.ThreadId = ::GetCurrentThreadId();
+		dumpInfo.ClientPointers = TRUE;
+		::MiniDumpWriteDump(
+			::GetCurrentProcess(),
+			::GetCurrentProcessId(),
+			hDumpFile,
+			MiniDumpNormal,
+			&dumpInfo,
+			NULL,
+			NULL
+			);
+	}
+	return 0;
 }

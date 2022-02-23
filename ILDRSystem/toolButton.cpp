@@ -13,7 +13,7 @@ ToolButton::ToolButton(QString pic_name, QWidget *parent)
 	//设置文本粗体
 	QFont &text_font = const_cast<QFont &>(font());
 	text_font.setWeight(QFont::Bold);
-	text_font.setPixelSize(16);
+	text_font.setPixelSize(13);
 
 	setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 

@@ -14,18 +14,49 @@
         <file alias="arrowright">Resources/sys/arrowRight.png</file>
     </qresource>
     <qresource prefix="/sys">
-        <file alias="Logo">Resources/sys/Icon.png</file>
+        <file alias="icon">Resources/sys/Icon.png</file>
         <file alias="UserBeforeLogin">Resources/sys/User.png</file>
         <file alias="UserAfterLogin">Resources/sys/User2.png</file>
         <file alias="Alert">Resources/Alert.png</file>
         <file alias="Pause">Resources/Pause.png</file>
         <file alias="Pause1">Resources/Pause1.png</file>
-        <file alias="Light.svg">Resources/sys/Light.svg</file>
         <file alias="Light.png">Resources/sys/Light.png</file>
+    </qresource>
+    <qresource prefix="/toolWidget">
+        <file alias="algset">Resources/toolwidget/algset.png</file>
+        <file alias="Operation">Resources/toolwidget/bottle.png</file>
+        <file alias="carve">Resources/toolwidget/Carve.png</file>
+        <file alias="History">Resources/toolwidget/count.png</file>
+        <file alias="Article">Resources/toolwidget/management.png</file>
+        <file alias="Settings">Resources/toolwidget/set.png</file>
+        <file alias="start">Resources/toolwidget/start.png</file>
+        <file alias="stop">Resources/toolwidget/stop.png</file>
+        <file alias="home">Resources/toolwidget/home1.png</file>
+        <file alias="daheng">Resources/toolwidget/daheng.png</file>
+        <file alias="exit">Resources/toolwidget/exit.png</file>
+        <file alias="clear">Resources/toolwidget/Clear.png</file>
+        <file alias="InterFace">Resources/toolwidget/DeBug.png</file>
+        <file alias="InOut">Resources/toolwidget/PLC.png</file>
+        <file alias="help">Resources/toolwidget/help.png</file>
+        <file alias="test">Resources/toolwidget/test.png</file>
+        <file alias="UpDown">Resources/toolwidget/first.png</file>
+        <file alias="GoDown">Resources/toolwidget/second.png</file>
+        <file alias="Alarm">Resources/toolwidget/Alarm.png</file>
+        <file alias="Light">Resources/toolwidget/Light.png</file>
+        <file alias="Lock">Resources/toolwidget/Lock.png</file>
+        <file alias="Unlock">Resources/toolwidget/Unlock.png</file>
     </qresource>
     <qresource prefix="/loading">
         <file>Resources/loading.png</file>
         <file alias="loading">Resources/loading2.png</file>
+    </qresource>
+    <qresource prefix="/toolButton">
+        <file alias="green">Resources/toolwidget/green.png</file>
+        <file alias="image">Resources/toolwidget/image.png</file>
+        <file alias="red">Resources/toolwidget/info.png</file>
+        <file alias="orange">Resources/toolwidget/orange.png</file>
+        <file alias="yellow">Resources/toolwidget/yellow.png</file>
+        <file alias="blue">Resources/toolwidget/blue.png</file>
     </qresource>
     <qresource prefix="/flags">
         <file>Resources/Flags/China.png</file>
@@ -45,18 +76,10 @@
         <file alias="stopShow_enter">Resources/pushbotton/stopshow_enter.png</file>
         <file alias="stopShow_pressed">Resources/pushbotton/stopshow_press.png</file>
     </qresource>
-    <qresource prefix="/qss">
-        <file alias="ILDR.qss">Resources/qss/ILDR.qss</file>
-    </qresource>
-    <qresource prefix="/toolButton">
-        <file alias="Operation">Resources/toolwidget/Operation.png</file>
-        <file alias="Settings">Resources/toolwidget/Settings.png</file>
-        <file alias="Alarm">Resources/toolwidget/Alarm.png</file>
-        <file alias="History">Resources/toolwidget/History.png</file>
-        <file alias="InOut">Resources/toolwidget/InOut.png</file>
-        <file alias="Light">Resources/toolwidget/Light.png</file>
-        <file alias="Lock">Resources/toolwidget/Lock.png</file>
-        <file alias="Unlock">Resources/toolwidget/Unlock.png</file>
-        <file alias="Reset">Resources/toolwidget/Reset.png</file>
+    <qresource prefix="/calendar">
+        <file alias="left">Resources/calendar/left.png</file>
+        <file alias="right">Resources/calendar/right.png</file>
+        <file alias="next">Resources/calendar/next.png</file>
+        <file alias="prev">Resources/calendar/prev.png</file>
     </qresource>
 </RCC>
