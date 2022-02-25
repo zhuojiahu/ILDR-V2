@@ -1,7 +1,7 @@
 ﻿#ifndef TITLEWIDGET_H
 #define TITLEWIDGET_H
 
-#include <QWidget>
+#include <QFrame>
 #include <QLabel>
 #include <QPushButton>
 #include <QMouseEvent>
@@ -12,7 +12,7 @@
 #include "toolButton.h"
 #include "common.h"
 
-class WidgetTitle : public QWidget
+class WidgetTitle : public QFrame
 {
     Q_OBJECT
 public:

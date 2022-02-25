@@ -1,10 +1,14 @@
 #include "widget_test.h"
 
 #include <QMessageBox>
+#include <QStringList>
 
 #include "clogfile.h"
 #include "ILDRSystem.h"
 #include "EquipRuntime.h"
+#include "OptButtonGroup.h"
+//剔废参数列表项目最大列数
+const int maxColCnt = 5;
 
 extern SysMainUI *pMainFrm;
 
@@ -48,6 +52,7 @@ WidgetTest::WidgetTest(QWidget *parent)
     {
         connect(pMainFrm->pdetthread[i], SIGNAL(signals_updateAlert(int)), this, SLOT(slots_updateAlert(int)));
     }
+    
     init();
     timerUpdateIOCardCounter = new QTimer(this);
     timerUpdateIOCardCounter->setInterval(100);//每毫秒刷新一次计数
@@ -126,9 +131,23 @@ void WidgetTest::slots_intoWidget()
 	ui.spinBox_Number->setValue(iSaveImgCount);
 	initInformation();//更新接口卡配置
 	ui.comboBox->setCurrentIndex(ifshowImage);
+    slots_reloadKickParams();
 }
 bool WidgetTest::leaveWidget()
 {
+    //移除标记项
+    auto btns = markedIDGroup->buttons();
+    foreach(auto btn, btns)
+    {
+        ui.glayMardIDs->removeWidget(btn);
+        markedIDGroup->removeButton(btn);
+    }
+    btns = markedCaviGroup->buttons();
+    foreach(auto btn, btns)
+    {
+        ui.glayMarkedCavity->removeWidget(btn);
+        markedCaviGroup->removeButton(btn);
+    }
 	return true;
 }
 
@@ -184,6 +203,11 @@ void WidgetTest::init()
 	ui.btnOK->setVisible(false);
 	ui.btnCancel->setVisible(false);
 
+    markedIDGroup = new OptButtonGroup(this);
+    markedIDGroup->setExclusive(false);
+    markedCaviGroup = new OptButtonGroup(this);
+    markedCaviGroup->setExclusive(false);
+
 	initEquipAlarmTablewidget();
 	connect(ui.btnSaveLoginHoldTime, SIGNAL(clicked()), this, SLOT(slots_SaveLoginHoldTime()));
 	connect(ui.btnChoseCamera, SIGNAL(clicked()), this, SLOT(slots_ChoseCamera()));
@@ -210,6 +234,12 @@ void WidgetTest::init()
 	connect(ui.btnOk_EquipAlarm,SIGNAL(clicked()),this,SLOT(slots_EquipAlarmSave()));
 	connect(ui.btn_ClearAlarm,SIGNAL(clicked()),this,SLOT(slots_EquipAlarmClear()));
 	connect(EquipRuntime::Instance(),SIGNAL(SendAlarms(int,bool)),this,SLOT(slots_SetEquipAlarmSatus(int,bool)));
+    connect(ui.btnMarkIDInvSel, SIGNAL(clicked()), this, SLOT(slots_ChangedSelection()));
+    connect(ui.btnMarkIDSelAll, SIGNAL(clicked()), this, SLOT(slots_ChangedSelection()));
+    connect(ui.btnMarkIDSelNO, SIGNAL(clicked()), this, SLOT(slots_ChangedSelection()));
+    connect(ui.btnMarkCaviInvSel, SIGNAL(clicked()), this, SLOT(slots_ChangedSelection()));
+    connect(ui.btnMarkCaviSelAll, SIGNAL(clicked()), this, SLOT(slots_ChangedSelection()));
+    connect(ui.btnMarkCaviSelNO, SIGNAL(clicked()), this, SLOT(slots_ChangedSelection()));
 	initInformation();
 }
 
@@ -295,7 +325,7 @@ void WidgetTest::initInformation()
 }
 void WidgetTest::initWidgetName()
 {
-	ui.widget_LoginHoldTime->setWidgetName(tr("Login Hold Time"));
+	ui.widget_LoginHoldTime->setWidgetName(tr("General Parameters"));
 	ui.widget_LoginHoldTime->widgetName->setMaximumHeight(25);
 	ui.namelayout_LoginHoldTime->addWidget(ui.widget_LoginHoldTime->widgetName);//,Qt::AlignTop);
 
@@ -590,6 +620,247 @@ void WidgetTest::slots_setKickModeEnable(int cardSN, bool en)
         {
             btn->setEnabled(en);
         }
+    }
+}
+
+void WidgetTest::on_cbtnKickMark_clicked(bool st)
+{
+    ui.gbxMarkIDs->setVisible(st);
+    ui.gbxMarkCavity->setVisible(st);
+    ui.cbtnManageList->setVisible(st);
+}
+
+void WidgetTest::on_btnSaveKickParam_clicked()
+{
+    if(!ui.cbtnManageList->isChecked())
+    {//正常保存参数
+        pMainFrm->m_sSystemInfo.bKickReadFailed = ui.cbtnKickFailed->isChecked();
+        pMainFrm->m_sSystemInfo.bKickMarked = ui.cbtnKickMark->isChecked();
+        pMainFrm->m_sSystemInfo.markedID.clear();
+        auto btns = markedIDGroup->buttons();
+        foreach(auto btn, btns)
+        {
+            if(btn->isChecked())
+            {
+                pMainFrm->m_sSystemInfo.markedID.insert(btn->text());
+            }
+        }
+        btns = markedCaviGroup->buttons();
+        foreach(auto btn, btns)
+        {
+            if(btn->isChecked())
+            {
+                pMainFrm->m_sSystemInfo.markedCavity.insert(btn->text());
+            }
+        }
+        //保存到文件
+        QSettings iniset(pMainFrm->m_sConfigInfo.m_strConfigPath,QSettings::IniFormat);
+        iniset.setIniCodec(QTextCodec::codecForName("GBK"));
+        iniset.setValue("system/KickReadFailed", pMainFrm->m_sSystemInfo.bKickReadFailed);
+        iniset.setValue("system/KickMarked", pMainFrm->m_sSystemInfo.bKickMarked);
+
+        iniset.setValue("system/MarkedIDList", QStringList(pMainFrm->m_sSystemInfo.markedID.toList()).join(","));
+        iniset.setValue("system/MarkedCavityList", QStringList(pMainFrm->m_sSystemInfo.markedCavity.toList()).join(","));
+    }
+    else
+    {//保存列表参数
+        pMainFrm->m_sSystemInfo.idlist.clear();
+        pMainFrm->m_sSystemInfo.cavityList.clear();
+        auto btns = markedIDGroup->buttons();
+        foreach(auto btn, btns)
+        {
+            auto id = btn->text();
+            if(!btn->isChecked())
+            {
+                pMainFrm->m_sSystemInfo.idlist.append(id);
+            }
+            else if(btn->isEnabled())
+            {
+                pMainFrm->m_sSystemInfo.markedID.remove(id);
+                ui.glayMardIDs->removeWidget(btn);
+                markedIDGroup->remove(btn);
+                delete btn;
+            }
+        }
+        pMainFrm->m_sSystemInfo.idlist.sort();
+        btns = markedCaviGroup->buttons();
+        foreach(auto btn, btns)
+        {
+            auto cavity = btn->text();
+            if(!btn->isChecked())
+            {
+                pMainFrm->m_sSystemInfo.cavityList.append(cavity);
+            }
+            else if(btn->isEnabled())
+            {
+                pMainFrm->m_sSystemInfo.markedCavity.remove(cavity);
+                ui.glayMarkedCavity->removeWidget(btn);
+                markedCaviGroup->remove(btn);
+                delete btn;
+            }
+        }
+        pMainFrm->m_sSystemInfo.cavityList.sort();
+        //保存到文件
+        QSettings iniset(pMainFrm->m_sConfigInfo.m_strConfigPath,QSettings::IniFormat);
+        iniset.setIniCodec(QTextCodec::codecForName("GBK"));
+        iniset.setValue("system/KickReadFailed", pMainFrm->m_sSystemInfo.bKickReadFailed);
+        iniset.setValue("system/KickMarked", pMainFrm->m_sSystemInfo.bKickMarked);
+
+        iniset.setValue("system/BottleIDList", pMainFrm->m_sSystemInfo.idlist.join(","));
+        iniset.setValue("system/MarkedIDList", QStringList(pMainFrm->m_sSystemInfo.markedID.toList()).join(","));
+        iniset.setValue("system/BottleFromCavity", pMainFrm->m_sSystemInfo.cavityList.join(","));
+        iniset.setValue("system/MarkedCavityList", QStringList(pMainFrm->m_sSystemInfo.markedCavity.toList()).join(","));
+    }
+}
+
+void WidgetTest::on_cbtnManageList_clicked(bool st)
+{
+    ui.ledtID->setVisible(st);
+    ui.ledtCavity->setVisible(st);
+    ui.btnIDAdd->setVisible(st);
+    ui.btnCaviAdd->setVisible(st);
+    markedCaviGroup->setManage(st);
+    markedIDGroup->setManage(st);
+    if(!st)
+    {
+        slots_reloadKickParams();
+    }
+}
+
+void WidgetTest::on_btnIDAdd_clicked()
+{
+    auto id = ui.ledtID->text();
+    if(id.isEmpty() || pMainFrm->m_sSystemInfo.idlist.contains(id)|| pMainFrm->m_sSystemInfo.markedID.contains(id))
+    {
+        return;
+    }
+    int index = markedIDGroup->buttons().size();
+    auto cbtn = new QCheckBox(id);
+    ui.glayMardIDs->addWidget(cbtn, index/maxColCnt, index%maxColCnt);
+    markedIDGroup->addButton(cbtn);
+    pMainFrm->m_sSystemInfo.idlist.append(id);
+}
+
+void WidgetTest::on_btnCaviAdd_clicked()
+{
+    auto id = ui.ledtCavity->text();
+    if(id.isEmpty() || pMainFrm->m_sSystemInfo.cavityList.contains(id) || pMainFrm->m_sSystemInfo.markedCavity.contains(id))
+    {
+        return;
+    }
+    int index = markedCaviGroup->buttons().size();
+    auto cbtn = new QCheckBox(id);
+    ui.glayMarkedCavity->addWidget(cbtn, index/maxColCnt, index%maxColCnt);
+    markedCaviGroup->addButton(cbtn);
+    pMainFrm->m_sSystemInfo.cavityList.append(id);
+}
+
+void WidgetTest::slots_ChangedSelection()
+{
+    if(sender() == ui.btnMarkIDInvSel)
+    {
+        markedIDGroup->invertSelection();
+    }
+    else if(sender() == ui.btnMarkIDSelAll)
+    {
+        markedIDGroup->selectAll();
+    }
+    else if(sender() == ui.btnMarkIDSelNO)
+    {
+        markedIDGroup->selectNo();
+    }
+    else if(sender() == ui.btnMarkCaviInvSel)
+    {
+        markedCaviGroup->invertSelection();
+    }
+    else if(sender() == ui.btnMarkCaviSelAll)
+    {
+        markedCaviGroup->selectAll();
+    }
+    else if(sender() == ui.btnMarkCaviSelNO)
+    {
+        markedCaviGroup->selectNo();
+    }
+}
+
+void WidgetTest::slots_reloadKickParams()
+{
+    //根据配置加载剔废参数
+    ui.cbtnKickFailed->setChecked(pMainFrm->m_sSystemInfo.bKickReadFailed);
+    ui.cbtnKickMark->setChecked(pMainFrm->m_sSystemInfo.bKickMarked);
+    on_cbtnKickMark_clicked(pMainFrm->m_sSystemInfo.bKickMarked);
+    slots_clearKickList();
+
+    ui.cbtnManageList->setChecked(false);
+    ui.ledtID->setVisible(false);
+    ui.ledtCavity->setVisible(false);;
+    ui.btnIDAdd->setVisible(false);
+    ui.btnCaviAdd->setVisible(false);
+    int index = 0;
+    for(int i = 0; i < pMainFrm->m_sSystemInfo.idlist.size();i++)
+    {
+        auto id = pMainFrm->m_sSystemInfo.idlist[i];
+        QCheckBox* cbtn = new QCheckBox(id);
+        auto bck = pMainFrm->m_sSystemInfo.markedID.contains(id);
+        cbtn->setChecked(bck);
+        ui.glayMardIDs->addWidget(cbtn, index/maxColCnt, index%maxColCnt);
+        index++;
+        markedIDGroup->addButton(cbtn);
+
+    }
+    foreach(auto id, pMainFrm->m_sSystemInfo.markedID)
+    {
+        if(!pMainFrm->m_sSystemInfo.idlist.contains(id))
+        {
+            QCheckBox* cbtn = new QCheckBox(id);
+            cbtn->setChecked(true);
+            cbtn->setEnabled(false);
+            ui.glayMardIDs->addWidget(cbtn, index/maxColCnt, index%maxColCnt);
+            index++;
+            markedIDGroup->addButton(cbtn);
+        }
+    }
+    index = 0;
+    for(int i = 0; i < pMainFrm->m_sSystemInfo.cavityList.size();i++)
+    {
+        auto caviNum = pMainFrm->m_sSystemInfo.cavityList[i];
+        QCheckBox* cbtn = new QCheckBox(caviNum);
+        auto bck =pMainFrm->m_sSystemInfo.markedCavity.contains(caviNum);
+        cbtn->setChecked( bck);
+        ui.glayMarkedCavity->addWidget(cbtn, index/maxColCnt, index%maxColCnt);
+        index++;
+        markedCaviGroup->addButton(cbtn);
+    }
+    foreach(auto caviNum, pMainFrm->m_sSystemInfo.markedCavity)
+    {
+        if(!pMainFrm->m_sSystemInfo.cavityList.contains(caviNum))
+        {
+            QCheckBox* cbtn = new QCheckBox(caviNum);
+            cbtn->setChecked(true);
+            cbtn->setEnabled(false);
+            ui.glayMarkedCavity->addWidget(cbtn, index/maxColCnt, index%maxColCnt);
+            index++;
+            markedCaviGroup->addButton(cbtn);
+        }
+    }
+}
+
+void WidgetTest::slots_clearKickList()
+{
+    //清空原控件
+    auto btns = markedIDGroup->buttons();
+    foreach(auto btn, btns)
+    {
+        ui.glayMardIDs->removeWidget(btn);
+        markedIDGroup->removeButton(btn);
+        delete btn;
+    }
+    btns = markedCaviGroup->buttons();
+    foreach(auto btn, btns)
+    {
+        ui.glayMarkedCavity->removeWidget(btn);
+        markedCaviGroup->removeButton(btn);
+        delete btn;
     }
 }
 

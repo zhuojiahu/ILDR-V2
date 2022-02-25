@@ -19,7 +19,7 @@ myPushButton::~myPushButton()
 
 }
 
-WidgetCarveSetting::WidgetCarveSetting(const QList<int>& idLst,QWidget *parent)
+UIOperation::UIOperation(const QList<int>& idLst,QWidget *parent)
 	: QWidget(parent)
     , listCameraID(idLst)
 {
@@ -112,15 +112,19 @@ WidgetCarveSetting::WidgetCarveSetting(const QList<int>& idLst,QWidget *parent)
     connect(errorList_widget,SIGNAL(signals_showErrorImage(QImage*, int, int, double, int, int, QList<QRect>, int )),image_widget, SLOT(slots_showErrorImage(QImage*, int, int, double, int, int, QList<QRect>, int)));
 	connect(errorList_widget,SIGNAL(signals_showMaxImage( int )),image_widget, SLOT(showMaxImage(int)));
 
+    connect(this, SIGNAL(signals_updateResult(BottleResult)), operInfo, SLOT(slots_updateResult(BottleResult)));
+    connect(this, SIGNAL(signals_clear()), operInfo, SLOT(slots_resetCurrent()));
+    connect(this, SIGNAL(signals_updateCount(int , int , int , int , int )), operInfo, SLOT(slots_updateCount(int , int , int , int , int )));
+
     slots_turnCameraPage(0);
 }
 
-WidgetCarveSetting::~WidgetCarveSetting()
+UIOperation::~UIOperation()
 {
     if(widgetCarveImage != nullptr)
 	    delete widgetCarveImage;
 }
-void WidgetCarveSetting::slots_changeButtonMode()
+void UIOperation::slots_changeButtonMode()
 {
 	if (0 == iButtonMode)
 	{
@@ -141,7 +145,7 @@ void WidgetCarveSetting::slots_changeButtonMode()
 		iButtonMode = 0;
 	}
 }
-void WidgetCarveSetting::slots_turnCameraPage(int index)
+void UIOperation::slots_turnCameraPage(int index)
 {
 	Widget_CarveImage *tempCarveiamge = dynamic_cast<Widget_CarveImage *>(pStackedCarve->widget(pStackedCarve->currentIndex()));
 	if (tempCarveiamge->bIsTestMode)
@@ -187,11 +191,11 @@ void WidgetCarveSetting::slots_turnCameraPage(int index)
 	tempCarveiamge->intoWidget();
 }
 
-void WidgetCarveSetting::slots_showCarve()
+void UIOperation::slots_showCarve()
 {
 	setWidget->setVisible(true);
 }
-void WidgetCarveSetting::slots_hideCarve()
+void UIOperation::slots_hideCarve()
 {
 	setWidget->setVisible(false);
 }

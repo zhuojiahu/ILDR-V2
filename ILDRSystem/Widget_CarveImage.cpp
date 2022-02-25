@@ -15,7 +15,7 @@ extern SysMainUI *pMainFrm;
 #define OPERATEDISTANCE 60
 Widget_CarveImage::Widget_CarveImage(QWidget *parent)
 	: QWidget(nullptr)
-    , m_prent((WidgetCarveSetting*)parent)
+    , m_prent((UIOperation*)parent)
 {
 	fCamScale = 1;
 	fLastCamScale = 1;

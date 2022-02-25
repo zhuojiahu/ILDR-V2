@@ -5,7 +5,7 @@
 
 struct sResult {
 	int iResult;						//当前机器号的综合结果
-	bool bSentToIOCard;						//是否已将结果发送到接口卡
+	bool bSentToIOCard;					//是否已将结果发送到接口卡
 	int b_Rlts[CAMERA_MAX_COUNT];		//存储结果的数组
 	bool b_Checked[CAMERA_MAX_COUNT];	//已经输入的结果的个数
 	Alg::s_ErrorPara *sErrorPara[CAMERA_MAX_COUNT];
@@ -45,19 +45,28 @@ public:
 	CCombineRlt();
 	~CCombineRlt();
 
-	void CombineRlt(int iCombineCount,int iGrabCountInQueen);
+    //综合设备个数
 	void Inital(int iGrabCountInQueen);
 
+    void CombineRlt(int iCombineCount,int iGrabCountInQueen);
 	void CombineRlt(int iCombineCount,int iGrabCountInQueen,int iRltCount);
+    //设置设备是否综合
 	void SetCombineCamera(int iCamera,bool bIfCombine);
+    //设置某个相机的结果
 	int AddResult(int iSignalNum,int CameraNum,int tmpResult);
+    //检查是否已完成综合,如果是返回综合的结果
 	bool ConbineResult(int iSignalNum,int CameraCount,int &bCombineRlt);
+    //重置所有图像号的设备状态
 	void RemovAllResult();
+    //移除图像号的结果,重置图像号的所有设备状态
 	void RemoveOneResult(int iSignalNum);	
-
+    //添加指定图像号下的指定相机的错误结果
 	void AddError(int iSignalNum,int CameraNum,Alg::s_ErrorPara tempsErrorPara);
+    //获取指定图像号的错误信息
 	Alg::s_ErrorPara ConbineError(int iSignalNum);
+    //清空所有的错误信息
 	void CCombineRlt::RemovAllError();
+    //清空指定图像号的错误信息
 	void CCombineRlt::RemoveOneError(int iSignalNum);
 	int ErrorType(int iImgNo);
 	int ErrorCamera(int iImgNo);

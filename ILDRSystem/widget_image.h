@@ -19,7 +19,7 @@
 #include "stateTool.h"
 #include "myimageshowitem.h"
 
-class WidgetCarveSetting;
+class UIOperation;
 
 class ImageWidget : public QWidget
 {
@@ -76,7 +76,7 @@ public:
 	QPushButton *buttonTurnImage;
 	QPushButton *buttonShowCarve;
 private:
-    WidgetCarveSetting* pParent;
+    UIOperation* pParent;
 
 	QWidget *widgetContent;
 	QWidget *widgetContentStess;

@@ -1,6 +1,8 @@
 #include "uiOperInfo.h"
 #include "ui_uiOperInfo.h"
 
+#include <ctime>
+
 #include <QTimer>
 
 UIOperInfo::UIOperInfo(QWidget *parent /*= 0*/)
@@ -23,27 +25,22 @@ UIOperInfo::~UIOperInfo()
     delete ui;
 }
 
-void UIOperInfo::slots_updateResult(int _nImgNO, QString _id, QDateTime _dt, QString _cavityNum, QDateTime _gmtTime)
+void UIOperInfo::slots_updateResult(BottleResult res)
 {
-    imgNO = _nImgNO;
-    id = _id;
-    dtResult = _dt;
-    CavityNumber = _cavityNum;
-    gmtTimeStamp = _gmtTime;
+    curResult = res;
 
-    ui->lRelsultImgNO->setText(QString::number(imgNO));
-    if(id == "")
+    ui->lRelsultImgNO->setText(QString::number(curResult.imgNO));
+    if(curResult.idLine == "")
     {
         ui->lRelsultID->setText("Error");
-        ui->lRelsultTime->setText("");
         ui->lRelsultTimeStamp->setText("");
+        ui->lRelsultCavity->setText("");
     }
     else
     {
-        ui->lRelsultID->setText(id);
-        ui->lRelsultTime->setText(QString("%1,%2,%3").arg(dtResult.date().toString(Qt::ISODate))
-            .arg(dtResult.time().toString("hh:mm:ss")).arg(CavityNumber));
-        ui->lRelsultTimeStamp->setText(gmtTimeStamp.toString("dd/MM/yyyy hhh mmm sss t"));
+        ui->lRelsultID->setText(curResult.idLine);
+        ui->lRelsultCavity->setText(curResult.cavityNum);
+        ui->lRelsultTimeStamp->setText(curResult.dtStamp.toString("dd/MM/yyyy hh:mm:ss"));
     }
 }
 

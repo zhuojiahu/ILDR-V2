@@ -123,14 +123,14 @@ int main(int argc, char *argv[])
 		    return 0;
 	    }
 	    //加载QSS样式表
-	    QFile qss(".\\GlasswareDetect.qss");
+	    QFile qss(".\\ILDRSystem.qss");
 	    qss.open(QFile::ReadOnly);
  	    qApp->setStyleSheet(qss.readAll());
 	    qss.close();
 
-	    QString strLoading = ":/loading/loading";
-	    QSplashScreen spLoading(QPixmap(strLoading.toLocal8Bit().constData()));
-	    spLoading.show();
+        QString strLoading = ":/loading/loading_tiama";
+        QSplashScreen spLoading(QPixmap(strLoading.toLocal8Bit().constData()));
+        spLoading.show();
 
 	    SysMainUI w;
 	    w.SetLanguage(iLanguage);

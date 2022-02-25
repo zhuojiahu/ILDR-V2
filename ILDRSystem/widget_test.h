@@ -8,6 +8,8 @@
 #include "ui_widget_test.h"
 #include "camerasatuslabel.h"
 
+class OptButtonGroup;
+
 class WidgetTest : public QWidget
 {
 	Q_OBJECT
@@ -68,6 +70,14 @@ public slots:
 	void slots_SetEquipAlarmSatus(int,bool);
     void slots_setKickModeEnable(int cardSN, bool en);
 	
+    void on_cbtnKickMark_clicked(bool);
+    void on_btnSaveKickParam_clicked();
+    void on_cbtnManageList_clicked(bool);
+    void on_btnIDAdd_clicked();
+    void on_btnCaviAdd_clicked();
+    void slots_ChangedSelection();
+    void slots_reloadKickParams();
+    void slots_clearKickList();
 private:
 	int iSaveMode;
 	int iLastSaveMode;
@@ -96,6 +106,9 @@ private:
     //用于控制卡剔废模式
     QButtonGroup* buttonGroup;
     QButtonGroup* buttonGroup2;
+
+    OptButtonGroup* markedIDGroup;      //标记ID的复选框列表
+    OptButtonGroup* markedCaviGroup;    //标记剔废线体号的复选框列表
 
 public:
 	int iIOCardOffSet[IOCard_MAX_COUNT];  //产品间距

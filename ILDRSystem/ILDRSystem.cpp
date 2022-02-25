@@ -635,7 +635,8 @@ void SysMainUI::InitParameter()
 	// 注册s_MSGBoxInfo至元对象系统,否则s_MSGBoxInfo,s_ImgWidgetShowInfo，s_StatisticsInfo无法作为参数进行传递
 	qRegisterMetaType<s_MSGBoxInfo>("s_MSGBoxInfo"); 
 	qRegisterMetaType<e_SaveLogType>("e_SaveLogType");  
-	qRegisterMetaType<QList<QRect>>("QList<QRect>");   
+	qRegisterMetaType<QList<QRect>>("QList<QRect>"); 
+    qRegisterMetaType<BottleResult>("BottleResult");
 	//初始化路径
 	QString path = QApplication::applicationFilePath();  
 	appPath = path.left(path.findRev("/")+1);
@@ -869,97 +870,149 @@ void SysMainUI::CountDefectIOCard(int iCamera, int ImageNumber, int tmpResult)
 	cCombine->AddResult(ImageNumber, iCamera, tmpResult);
 	if (cCombine->ConbineResult(ImageNumber, 0, comResult))//图像都拍完后结果综合
 	{
+        //处理当前图像号之前的5个图像号
         for	(int i = ImageNumber - 5; i<ImageNumber ;i++)
         {
         	if (!cCombine->IsReject((i+256)%256))
         	{
         		m_sRunningInfo.nCompensateKick[nCardSN]++;
-        		s_ResultInfo sResultInfo;
-        		sResultInfo.tmpResult = valueByKickMode(nCardSN, cCombine->m_Rlts[(i+256)%256].iResult);
-        		sResultInfo.nImgNo = (i+256)%256;
-        		sResultInfo.nIOCardNum = nCardSN;
-        		if (pMainFrm->m_sSystemInfo.m_bIsIOCardOK)
-        		{
-        			//暂时使用无用变量作为总的综合踢废数目 by zl
-        			m_sRunningInfo.nCompensateCardKick[2] += 1;
-        			pCard->SendResult(sResultInfo);
-                    if(sResultInfo.tmpResult == 1)
-                    {
-                        CLogFile::write(QString("CompensateKick IMGSN:%1 nCardSN:%2 Kick:%3")
-                            .arg(sResultInfo.nImgNo).arg(nCardSN).arg(sResultInfo.tmpResult), DebugLog, 0);
-                    }
-        		}
-        		cCombine->SetReject((i+256)%256);
-				cCombine->RemoveMoldNo((i+256)%256);
-        	}
+                CombineBottle(iCamera, i, cCombine->m_Rlts[(i+256)%256].iResult, true);
+            }
         }
-
+        //重置接下来的5个图像号剔废状态
 		for	(int i = ImageNumber; i < ImageNumber + 5;i++)
 		{
 			cCombine->SetReject(i%256,false);
-		}
-        ////暂时使用无用变量作为总的综合过检数目 by zl
-        //m_sRunningInfo.nGSoap_ErrorTypeCount[0]++;
-        m_sRunningInfo.nTotal[nCardSN]++;
-		s_ResultInfo sResultInfo;
-		sResultInfo.tmpResult = comResult;
-		sResultInfo.nImgNo = ImageNumber;
-		sResultInfo.nIOCardNum = 0;
-		if (m_sSystemInfo.m_bIsIOCardOK)
-        {
-            //CLogFile::write(QString("nCamSN:%1 nCardSN:%2 Kick:%3").arg(iCamera).arg(nCardSN).arg(comResult), DebugLog, 0);
-			pCard->SendResult(sResultInfo);
-		}
-		cCombine->SetReject(ImageNumber);
-		cCombine->RemoveOneResult(ImageNumber);
+        }
 
-		if (m_sRunningInfo.m_bCheck)	
-		{
-			//获取此图像号的模号
-			int pTmpMoldNo = cCombine->GetMoldNo(ImageNumber);
-			cCombine->RemoveMoldNo(ImageNumber);
-
-			int iErrorCamera = cCombine->ErrorCamera(ImageNumber);
-			s_ErrorPara sComErrorpara = cCombine->ConbineError(ImageNumber);
-			if (pMainFrm->m_sRunningInfo.m_cErrorTypeInfo[iErrorCamera].ErrorTypeJudge(sComErrorpara.nErrorType))
-			{
-				pMainFrm->m_sRunningInfo.m_cErrorTypeInfo[iErrorCamera].iErrorCountByType[sComErrorpara.nErrorType]+=1;
-				pMainFrm->m_sRunningInfo.m_iErrorCamCount[iErrorCamera] += 1;
-				 //暂时使用无用变量作为总的综合踢废数目 by zl
-				 m_sRunningInfo.nKick[nCardSN]++;
-				pMainFrm->m_sRunningInfo.m_iErrorTypeCount[sComErrorpara.nErrorType] +=1;	
-
-				//if( pMainFrm->m_sSystemInfo.m_bIsIOCardOK )
-				//{
-				//	if (nCardSN == 0)
-				//	{
-				//		pMainFrm->nSendData1[ImageNumber].id = iErrorCamera;
-				//		pMainFrm->nSendData1[ImageNumber].nType = sComErrorpara.nErrorType;
-				//		pMainFrm->nSendData1[ImageNumber].nErrorArea = sComErrorpara.nArea;
-				//		if (pMainFrm->m_sSystemInfo.m_iDeviceOnInitial == 2)//只有夹持瓶底读模号，前后壁设置为0
-				//			pMainFrm->nSendData1[ImageNumber].nMoldNo = pTmpMoldNo;
-				//		else
-				//			pMainFrm->nSendData1[ImageNumber].nMoldNo = 0;
-
-				//	}
-				//	else
-				//	{
-				//		pMainFrm->nSendData2[ImageNumber].id = iErrorCamera;
-				//		pMainFrm->nSendData2[ImageNumber].nType = sComErrorpara.nErrorType;
-				//		pMainFrm->nSendData2[ImageNumber].nErrorArea = sComErrorpara.nArea;
-				//		pMainFrm->nSendData2[ImageNumber].nMoldNo = 0;
-				//	}
-				//	//CLogFile::write(QString("IOCard:%1,ImgNo:%2,CamNo:%3,ErrorType:%4,ErrorArea:%5").arg(nCardSN).arg(ImageNumber).arg(iErrorCamera).arg(sComErrorpara.nErrorType).arg(sComErrorpara.nArea),CheckLog);
-				//}
-			}
-			else
-			{
-				pMainFrm->m_sRunningInfo.m_cErrorTypeInfo[iErrorCamera].iErrorCountByType[0]+=1;
-				pMainFrm->m_sRunningInfo.m_iErrorTypeCount[0] +=1;
-			}
-		}
-		
+        CombineBottle(iCamera, ImageNumber, comResult);		
 	}
+}
+
+void SysMainUI::CombineBottle(int iCamera, int ImageNumber, int tmpResult, bool CompensateKick)
+{
+    if(m_sCarvedCamInfo[iCamera].m_iIOCardSN < 0 || m_sCarvedCamInfo[iCamera].m_iIOCardSN>= IOCard_MAX_COUNT ||
+        m_cCombine[m_sCarvedCamInfo[iCamera].m_iIOCardSN] == NULL)
+    {
+        return;
+    }
+    int nCardSN = m_sCarvedCamInfo[iCamera].m_iIOCardSN;
+    auto pCard = m_vIOCard[nCardSN];
+    int comResult = -1;//综合后的结果
+    auto cCombine = m_cCombine[m_sCarvedCamInfo[iCamera].m_iIOCardSN];
+    BottleResult result;
+    if(m_bCombine.ConbineResult(ImageNumber, result))
+    {
+        if(result.idLine == "" )
+        {//未识别
+            if(pMainFrm->m_sSystemInfo.bKickReadFailed)
+            {
+                //NOTE:统计未识别剔废
+                tmpResult = 1;
+            }
+        }else
+        {
+            //得到识别正确的相机列表
+            QList<int> camList = m_bCombine.successCameraList(result);
+            m_sRunningInfo.nRead ++;
+            m_sRunningInfo.nInTime ++;
+            emit signals_updateResult(result);
+            if(pMainFrm->m_sSystemInfo.bKickMarked)
+            {
+                if(pMainFrm->m_sSystemInfo.markedID.contains(result.idLine))
+                {//标记ID剔废,设置剔废
+                    //NOTE:统计标记ID剔废
+                    tmpResult = 1;
+                }
+                else if(pMainFrm->m_sSystemInfo.markedCavity.contains(result.cavityNum))
+                {//标记来源产线剔废
+                    //NOTE:统计标记来源产线剔废
+                    tmpResult = 1;
+                }
+            }
+        }
+        emit signals_updateResult(result);
+        s_ResultInfo sResultInfo;
+        sResultInfo.tmpResult = valueByKickMode(nCardSN, tmpResult);
+        sResultInfo.nImgNo = ImageNumber;
+        sResultInfo.nIOCardNum = 0;
+        if (m_sSystemInfo.m_bIsIOCardOK)
+        {
+            pCard->SendResult(sResultInfo);
+            if(CompensateKick)
+            {
+                //暂时使用无用变量作为总的综合踢废数目 by zl
+                m_sRunningInfo.nCompensateCardKick[2] += 1;
+                if(sResultInfo.tmpResult == 1)
+                {
+                    CLogFile::write(QString("CompensateKick IMGSN:%1 nCardSN:%2 Kick:%3")
+                        .arg(sResultInfo.nImgNo).arg(nCardSN).arg(sResultInfo.tmpResult), DebugLog, 0);
+                }
+            }
+        }
+        cCombine->SetReject(ImageNumber);
+        cCombine->RemoveOneResult(ImageNumber);
+        m_bCombine.RemoveOneResult(ImageNumber);
+
+        if(CompensateKick)//按照原逻辑补踢不计数
+            return;
+        if (m_sRunningInfo.m_bCheck)	
+        {
+            m_sRunningInfo.nTotal[nCardSN]++;
+            if(!m_sSystemInfo.m_bIsIOCardOK )
+            {//模拟下 无相机情况下,只在综合里增加计数
+                m_sRunningInfo.m_checkedNum++;
+                m_sRunningInfo.nTotalBot++;
+                if(comResult)
+                {//模拟下的剔废计数
+                    m_sRunningInfo.m_failureNum ++;
+                    m_sRunningInfo.nRejectBot ++;
+                }
+            }
+            //获取此图像号的模号
+            int pTmpMoldNo = cCombine->GetMoldNo(ImageNumber);
+            cCombine->RemoveMoldNo(ImageNumber);
+
+            int iErrorCamera = cCombine->ErrorCamera(ImageNumber);
+            s_ErrorPara sComErrorpara = cCombine->ConbineError(ImageNumber);
+            if (pMainFrm->m_sRunningInfo.m_cErrorTypeInfo[iErrorCamera].ErrorTypeJudge(sComErrorpara.nErrorType))
+            {
+                pMainFrm->m_sRunningInfo.m_cErrorTypeInfo[iErrorCamera].iErrorCountByType[sComErrorpara.nErrorType]+=1;
+                pMainFrm->m_sRunningInfo.m_iErrorCamCount[iErrorCamera] += 1;
+                //暂时使用无用变量作为总的综合踢废数目 by zl
+                m_sRunningInfo.nKick[nCardSN]++;
+                pMainFrm->m_sRunningInfo.m_iErrorTypeCount[sComErrorpara.nErrorType] +=1;
+
+                //if( pMainFrm->m_sSystemInfo.m_bIsIOCardOK )
+                //{
+                //	if (nCardSN == 0)
+                //	{
+                //		pMainFrm->nSendData1[ImageNumber].id = iErrorCamera;
+                //		pMainFrm->nSendData1[ImageNumber].nType = sComErrorpara.nErrorType;
+                //		pMainFrm->nSendData1[ImageNumber].nErrorArea = sComErrorpara.nArea;
+                //		if (pMainFrm->m_sSystemInfo.m_iDeviceOnInitial == 2)//只有夹持瓶底读模号，前后壁设置为0
+                //			pMainFrm->nSendData1[ImageNumber].nMoldNo = pTmpMoldNo;
+                //		else
+                //			pMainFrm->nSendData1[ImageNumber].nMoldNo = 0;
+
+                //	}
+                //	else
+                //	{
+                //		pMainFrm->nSendData2[ImageNumber].id = iErrorCamera;
+                //		pMainFrm->nSendData2[ImageNumber].nType = sComErrorpara.nErrorType;
+                //		pMainFrm->nSendData2[ImageNumber].nErrorArea = sComErrorpara.nArea;
+                //		pMainFrm->nSendData2[ImageNumber].nMoldNo = 0;
+                //	}
+                //	//CLogFile::write(QString("IOCard:%1,ImgNo:%2,CamNo:%3,ErrorType:%4,ErrorArea:%5").arg(nCardSN).arg(ImageNumber).arg(iErrorCamera).arg(sComErrorpara.nErrorType).arg(sComErrorpara.nArea),CheckLog);
+                //}
+            }
+            else
+            {
+                pMainFrm->m_sRunningInfo.m_cErrorTypeInfo[iErrorCamera].iErrorCountByType[0]+=1;
+                pMainFrm->m_sRunningInfo.m_iErrorTypeCount[0] +=1;
+            }
+        }
+    }
 }
 
 bool SysMainUI::isLock() const
@@ -1159,8 +1212,18 @@ void SysMainUI::ReadIniInformation()
 		m_sRuntimeInfo.AlarmsInfo << runtimeCfg.value(QString("EquipAlarm/Alarm%1_Info").arg(i+1) , "" ).toString();
 	}
 
-
-    m_sRunningInfo.refCardSN = m_sSystemInfo.iIOCardCount;
+    m_sRunningInfo.refCardSN = m_sSystemInfo.iIOCardCount-1;
+    //读取新加的剔废相关信息
+    m_sSystemInfo.bKickReadFailed = iniset.value("system/KickReadFailed", false).toBool();
+    m_sSystemInfo.bKickMarked = iniset.value("system/KickMarked", false).toBool();
+    QString tmp = iniset.value("system/BottleIDList", "").toString();
+    m_sSystemInfo.idlist = tmp.split(",", QString::SkipEmptyParts);
+    tmp = iniset.value("system/MarkedIDList", "").toString();
+    m_sSystemInfo.markedID = tmp.split(",", QString::SkipEmptyParts).toSet();
+    tmp = iniset.value("system/BottleFromCavity", "").toString();
+    m_sSystemInfo.cavityList = tmp.split(",", QString::SkipEmptyParts);
+    tmp = iniset.value("system/MarkedCavityList", "").toString();
+    m_sSystemInfo.markedCavity = tmp.split(",", QString::SkipEmptyParts).toSet();
 }
 //读取切割信息
 void SysMainUI::ReadCorveConfig()
@@ -1492,11 +1555,13 @@ void SysMainUI::SetCombineInfo()
                 m_cCombine[j]->SetCombineCamera(i,false);
             }
         }
+        m_bCombine.SetCombineCamera(i, true);
     }
     for(int i = 0; i < IOCard_MAX_COUNT;i++)
     {
         m_cCombine[i]->Inital(m_sSystemInfo.IOCardiCamCount[i]);
     }
+    m_bCombine.Inital(m_sSystemInfo.iCamCount);
 }
 //初始化IO卡
 void SysMainUI::InitIOCard()
@@ -1651,7 +1716,7 @@ void SysMainUI::initInterface()
     title_widget = new WidgetTitle(this);
     //操作页面
     auto idlst = slots_getDeviceList(1);
-    widget_operation = new WidgetCarveSetting(idlst);
+    widget_operation = new UIOperation(idlst);
     //算法设置页面
     widget_alg = new QWidget(this);
     widget_alg->setObjectName("widget_alg");
@@ -1659,7 +1724,7 @@ void SysMainUI::initInterface()
 	widget_article = new WidgetManagement;
     //系统设置页面
 	widget_settings = new WidgetTest(this);
-	widget_settings->slots_intoWidget();
+	//widget_settings->slots_intoWidget();
     //历史页面
 	widget_history = new widget_count(this);
 	widget_inout = new QWidget(this);
@@ -1673,7 +1738,7 @@ void SysMainUI::initInterface()
 	statked_widget->setPalette(palette);
 	statked_widget->setAutoFillBackground(true);
 
-	 statked_widget->addWidget(widget_operation);
+	statked_widget->addWidget(widget_operation);
     statked_widget->addWidget(widget_alg);
     statked_widget->addWidget(widget_article);
     statked_widget->addWidget(widget_settings);
@@ -1756,6 +1821,10 @@ void SysMainUI::initInterface()
 	main_layout->setContentsMargins(0, 0, 0, 0);
 
 	setLayout(main_layout);
+
+    connect(this,SIGNAL(signals_updateResult(BottleResult)),widget_operation, SIGNAL(signals_updateResult(BottleResult)));
+    connect(this,SIGNAL(signals_clear()),widget_operation, SIGNAL(signals_clear()));
+    connect(this,SIGNAL(signals_updateCount(int, int, int, int, int)),widget_operation, SIGNAL(signals_updateCount(int, int, int, int, int)));
 
     connect(widget_settings,SIGNAL(signals_sendAlarm(int, QString)),widget_Warning,SLOT(slots_ShowWarning(int, QString)));
     connect(this,SIGNAL(signals_ShowWarning(int , QString )),widget_Warning,SLOT(slots_ShowWarning(int , QString )));	
@@ -2092,15 +2161,6 @@ void SysMainUI::slots_UpdateCoderNumber()
     }
 	QString strValue,strEncoder,strTime;
 	strValue ="	";
-	/*if(m_sSystemInfo.m_iDeviceOnInitial == 2  &&  m_sSystemInfo.iReadMouldIDCamNo != -1 )
-	{
-		double num = 0.0;
-		if(m_sRunningInfo.nModelCheckedCount != 0 && m_sRunningInfo.nModelReadFailureNumber <= m_sRunningInfo.nModelCheckedCount )
-		{
-			num = ((double)m_sRunningInfo.nModelReadFailureNumber * 100  / m_sRunningInfo.nModelCheckedCount);
-		}
-		strEncoder = tr("MoudleRate: %1%").arg(QString::number(num,'f', 2))+ strValue ;
-	}*/
 	strEncoder += QString(tr("Speed:") +m_sRunningInfo.strSpeed+strValue+tr("Coder Number")+":%1").arg( nCodeNum);
 	strTime = strValue+QString(tr("Time:"))+QTime::currentTime().toString() + strValue+sVersion;
 	
@@ -2111,6 +2171,7 @@ void SysMainUI::slots_UpdateCoderNumber()
 		labelCoder->setText(strEncoder+strTime);
 	}
 
+    emit signals_updateCount(m_sRunningInfo.nTotalBot, m_sRunningInfo.nRejectBot, m_sRunningInfo.nRead, m_sRunningInfo.nInTime, m_sRunningInfo.nEngraved);
 }
 void SysMainUI::slots_updateCameraState(int nCam,int mode)
 {
@@ -2157,6 +2218,11 @@ void SysMainUI::slots_turnPage(int current_page, int iPara)
             {
                 return ;
             }
+        }
+        break;
+    case ENaviPageSettings:
+        {
+            widget_settings->leaveWidget();
         }
         break;
     }

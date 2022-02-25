@@ -1,11 +1,13 @@
 #include "widget_title.h"
 #include <QCheckBox>
+#include <QGroupBox>
+
 #include "ILDRSystem.h"
 extern SysMainUI *pMainFrm;
 
 
 WidgetTitle::WidgetTitle(QWidget *parent)
-	: QWidget(parent)
+	: QFrame(parent)
 {
 	setObjectName("WidgetTitle");
 	version_title = new QLabel();
@@ -34,6 +36,7 @@ WidgetTitle::WidgetTitle(QWidget *parent)
 	title_layout->setContentsMargins(5, 0, 0, 0);
 	version_title->setContentsMargins(15, 0, 0, 0);
 
+    QGroupBox* btnGbx = new QGroupBox; 
 	QStringList string_list;
 	string_list<<":/toolWidget/Operation"
         <<":/toolWidget/algset"
@@ -62,7 +65,7 @@ WidgetTitle::WidgetTitle(QWidget *parent)
 	connect(signal_mapper, SIGNAL(mapped(QString)), this, SLOT(turnPage(QString)));
 	
 	QLabel *logo_label = new QLabel();
-	QPixmap pixmap(":/toolWidget/daheng");
+	QPixmap pixmap(":/sys/logo_tiama");
 	logo_label->setPixmap(pixmap);
 	logo_label->setFixedSize(pixmap.size());
 
@@ -83,10 +86,11 @@ WidgetTitle::WidgetTitle(QWidget *parent)
 	button_layout->addLayout(layoutLogo);
 	button_layout->setSpacing(8);
 	button_layout->setContentsMargins(15, 0, 15, 0);
-
+    btnGbx->setLayout(button_layout);
+    btnGbx->setObjectName("toolbar");
 	QVBoxLayout *main_layout = new QVBoxLayout();
 	main_layout->addLayout(title_layout);
-	main_layout->addLayout(button_layout);
+	main_layout->addWidget(btnGbx);
 	main_layout->setSpacing(0);
 	main_layout->setContentsMargins(0, 0, 0, 0);
 

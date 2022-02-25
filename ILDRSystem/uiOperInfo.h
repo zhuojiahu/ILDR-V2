@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QDateTime>
 
+#include "ConfigInfo.h"
+
 namespace Ui
 {
     class uiOperInfo;
@@ -19,7 +21,7 @@ public:
 
 public slots:
     //UI Update
-    void slots_updateResult(int _nImgNO, QString _id, QDateTime _dt, QString _cavityNum, QDateTime _gmtTime);
+    void slots_updateResult(BottleResult res);
     void slots_updateCount(int total, int reject, int read, int intime, int engraved);
 
     //用于重置当前界面统计数据
@@ -30,11 +32,7 @@ private:
 
     //当前结果
     bool bSucceed;
-    int imgNO;                  //当前图像号
-    QString id;                 //结果ID
-    QDateTime dtResult;         //结果时间
-    QString CavityNumber;       //识别工位
-    QDateTime gmtTimeStamp;     //结果时间戳
+    BottleResult curResult; //识别结果
 
     //当前统计结果
     int nTotal;     //过检总数

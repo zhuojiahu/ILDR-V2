@@ -11,7 +11,7 @@ ImageWidget::ImageWidget(const QList<int>& idLst, QWidget *parent)
     , listCamID(idLst)
 {
 	ui.setupUi(this);
-    pParent = (WidgetCarveSetting*)parent;
+    pParent = (UIOperation*)parent;
 
 	iSpacing = 10;
 	iShownMode = -1;

@@ -73,6 +73,7 @@ void CPasswordDlg::slot_CancelBtn()
 
 void CPasswordDlg::slot_ChangePwdBtn(bool isChecked)
 {
+    setWindowTitle(tr("Please set new password"));
 	isChangePwd = isChecked;
 	if (isChecked)
 	{

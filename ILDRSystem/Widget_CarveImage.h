@@ -15,7 +15,7 @@
 #include "rotemptybottle.h"
 #include "DHBaseWidget.h"
 
-class WidgetCarveSetting;
+class UIOperation;
 
 class Widget_CarveImage : public QWidget
 {
@@ -101,7 +101,7 @@ protected:
 	QPoint buttomPoint;
 
 private:
-    WidgetCarveSetting* m_prent;
+    UIOperation* m_prent;
 
 	QPoint zeroPoint;
 	QPoint oldTopPoint;

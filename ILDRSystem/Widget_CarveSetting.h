@@ -4,11 +4,12 @@
 #include <QWidget>
 #include <QStackedWidget>
 #include <QToolButton>
+
 #include "Widget_CarveImage.h"
 #include "widget_image.h"
 #include "cerrorimagelist.h"
-
 #include "DHBaseWidget.h"
+#include "ConfigInfo.h"
 
 class myPushButton : public QPushButton
 {
@@ -20,19 +21,23 @@ public:
 
 };
 
-class WidgetCarveSetting : public QWidget
+class UIOperation : public QWidget
 {
 	Q_OBJECT
 
 public:
-	WidgetCarveSetting(const QList<int>& idLst,QWidget *parent = 0);
-	~WidgetCarveSetting();
+	UIOperation(const QList<int>& idLst,QWidget *parent = 0);
+	~UIOperation();
 public slots:
 	void slots_changeButtonMode();
 	void slots_turnCameraPage(int index);
 	void slots_showCarve();
 	void slots_hideCarve();
 
+signals:
+    void signals_updateResult(BottleResult res);
+    void signals_updateCount(int total, int reject, int read, int intime, int engraved);
+    void signals_clear();
 public:
     QList<int> listCameraID;                        //本界面包含的相机ID列表
 

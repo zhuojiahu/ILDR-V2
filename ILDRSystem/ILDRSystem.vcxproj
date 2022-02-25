@@ -170,6 +170,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BottleResultCombine.cpp" />
     <ClCompile Include="camerasatuslabel.cpp" />
     <ClCompile Include="cdetectspeed.cpp" />
     <ClCompile Include="cerrorimagelist.cpp" />
@@ -244,6 +245,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_NavigationWidget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_OptButtonGroup.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -393,6 +398,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_OptButtonGroup.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_pieview.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -471,6 +480,7 @@
     <ClCompile Include="MyLogText.cpp" />
     <ClCompile Include="mytableview.cpp" />
     <ClCompile Include="NavigationWidget.cpp" />
+    <ClCompile Include="OptButtonGroup.cpp" />
     <ClCompile Include="pieview.cpp" />
     <ClCompile Include="pushLicense.cpp" />
     <ClCompile Include="qcustomplot.cpp" />
@@ -1635,6 +1645,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_QT3SUPPORT_LIB -DQT3_SUPPORT -DQWT_DLL -DQT_SQL_LIB -D_MBCS "-I.\GeneratedFiles" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\Qt3Support" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\qwt" "-I.\..\Inc" "-I.\..\x64\Inc\incHalcon12\cpp" "-I.\..\x64\Inc\incHalcon12" "-I.\..\x64\Inc"</Command>
     </CustomBuild>
+    <ClInclude Include="BottleResultCombine.h" />
     <ClInclude Include="database.h" />
     <ClInclude Include="GeneratedFiles\ui_cpassworddlg.h" />
     <ClInclude Include="GeneratedFiles\ui_uiOperInfo.h" />
@@ -1692,6 +1703,24 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_QT3SUPPORT_LIB -DQT3_SUPPORT -DQWT_DLL -DQT_SQL_LIB -DWIN_32_1_10 "-I.\GeneratedFiles" "-I." "-IC:\Qt\4.8.5\include\qwt" "-IC:\Qt\4.8.5\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-IC:\Qt\4.8.5\include\QtCore" "-IC:\Qt\4.8.5\include\QtGui" "-IC:\Qt\4.8.5\include\Qt3Support" "-I." "-IC:\Qt\4.8.5\include\QtSql" "-IF:\GlasswareDetectSystem\Inc"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing NavigationWidget.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_QT3SUPPORT_LIB -DQT3_SUPPORT -DQWT_DLL -DQT_SQL_LIB -D_MBCS "-I.\GeneratedFiles" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\Qt3Support" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\qwt" "-I.\..\Inc" "-I.\..\x64\Inc\incHalcon12\cpp" "-I.\..\x64\Inc\incHalcon12" "-I.\..\x64\Inc"</Command>
+    </CustomBuild>
+    <CustomBuild Include="OptButtonGroup.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing OptButtonGroup.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQWT_DLL -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_QT3SUPPORT_LIB -DQT3_SUPPORT -DQT_SQL_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include\qwt" "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\Qt3Support" "-I.\..\..\inc" "-I." "-I$(QTDIR)\include\QtSql"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing OptButtonGroup.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQWT_DLL -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_QT3SUPPORT_LIB -DQT3_SUPPORT -DQT_SQL_LIB -D_MBCS "-I.\GeneratedFiles" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\Qt3Support" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\qwt" "-I.\Inc"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing OptButtonGroup.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_QT3SUPPORT_LIB -DQT3_SUPPORT -DQWT_DLL -DQT_SQL_LIB -DWIN_32_1_10 "-I.\GeneratedFiles" "-I." "-IC:\Qt\4.8.5\include\qwt" "-IC:\Qt\4.8.5\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-IC:\Qt\4.8.5\include\QtCore" "-IC:\Qt\4.8.5\include\QtGui" "-IC:\Qt\4.8.5\include\Qt3Support" "-I." "-IC:\Qt\4.8.5\include\QtSql" "-IF:\GlasswareDetectSystem\Inc"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing OptButtonGroup.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_DLL -DQT_CORE_LIB -DQT_GUI_LIB -DQT_QT3SUPPORT_LIB -DQT3_SUPPORT -DQWT_DLL -DQT_SQL_LIB -D_MBCS "-I.\GeneratedFiles" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I." "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\Qt3Support" "-I$(QTDIR)\include\QtSql" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtNetwork" "-I$(QTDIR)\include\qwt" "-I.\..\Inc" "-I.\..\x64\Inc\incHalcon12\cpp" "-I.\..\x64\Inc\incHalcon12" "-I.\..\x64\Inc"</Command>
     </CustomBuild>

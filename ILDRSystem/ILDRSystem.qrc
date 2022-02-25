@@ -21,6 +21,8 @@
         <file alias="Pause">Resources/Pause.png</file>
         <file alias="Pause1">Resources/Pause1.png</file>
         <file alias="Light.png">Resources/sys/Light.png</file>
+        <file alias="logo_tiama.png">Resources/logo_tiama.png</file>
+        <file alias="tiama_logo">Resources/tiama_logo.png</file>
     </qresource>
     <qresource prefix="/toolWidget">
         <file alias="algset">Resources/toolwidget/algset.png</file>
@@ -49,6 +51,7 @@
     <qresource prefix="/loading">
         <file>Resources/loading.png</file>
         <file alias="loading">Resources/loading2.png</file>
+        <file alias="loading_tiama">Resources/loading_tiama.png</file>
     </qresource>
     <qresource prefix="/toolButton">
         <file alias="green">Resources/toolwidget/green.png</file>

@@ -5,6 +5,7 @@
 
 #include <QThread>
 #include "stateTool.h"
+#include "ConfigInfo.h"
 
 class QDir;
 
@@ -28,8 +29,8 @@ signals:
 	void signals_updateAlert(int);
 
 private:
-	void DetectNormal(CGrabElement *pElement);
-	void DetectStress(CGrabElement *pElement);
+    void DetectNormal(CGrabElement *pElement);
+    void DetectStress(CGrabElement *pElement);
 	void rotateImage(CGrabElement *pElement);
 	void checkImage(CGrabElement *pElement,int iCheckMode);
 	bool getCheckResult(CGrabElement *pElement);
@@ -56,6 +57,7 @@ private:
 	s_AlgCheckResult *pAlgCheckResult;		//返回检测结果结构体
 	s_Status  sReturnStatus;				// 函数执行状态信息
 	s_Loc_Ori tempOri;
+    BottleResult res;   //当前识别结果
 public:
 	int iCamera;
 	int iImageNo;

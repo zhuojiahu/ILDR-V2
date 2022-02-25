@@ -26,17 +26,10 @@
       <string>result</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="1">
-       <widget class="QLabel" name="lRelsultID">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>XXXXXXXXX</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="lRelsultTime">
-        <property name="text">
-         <string>Date,Time,Cavitynumber</string>
+         <string>ImageNo:</string>
         </property>
        </widget>
       </item>
@@ -54,10 +47,10 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_9">
+      <item row="0" column="1">
+       <widget class="QLabel" name="lRelsultImgNO">
         <property name="text">
-         <string>Time:</string>
+         <string>XXX</string>
         </property>
        </widget>
       </item>
@@ -68,17 +61,24 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_8">
+      <item row="1" column="1">
+       <widget class="QLabel" name="lRelsultID">
         <property name="text">
-         <string>ImageNo:</string>
+         <string>XXXXXXXXX</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="lRelsultImgNO">
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_12">
         <property name="text">
-         <string>XXX</string>
+         <string>Cavity Number:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="lRelsultCavity">
+        <property name="text">
+         <string>Cavitynumber</string>
         </property>
        </widget>
       </item>

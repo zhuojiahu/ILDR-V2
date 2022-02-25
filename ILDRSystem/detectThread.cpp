@@ -45,6 +45,7 @@ void DetectThread::ProcessHanlde(int Camera)
 		pMainFrm->nQueue[Camera].listDetect.removeFirst();
 		pMainFrm->nQueue[Camera].mDetectLocker.unlock();
 		iCamera = DetectElement.iCameraNormal;
+        res.reset();
 		//��תԭʼͼƬ
 
 		if (90 == pMainFrm->m_sRealCamInfo[iCamera].m_iImageRoAngle || 180 == pMainFrm->m_sRealCamInfo[iCamera].m_iImageRoAngle|| 270 == pMainFrm->m_sRealCamInfo[iCamera].m_iImageRoAngle)
@@ -389,6 +390,9 @@ bool DetectThread::getCheckResult(CGrabElement *pElement)
 void DetectThread::kickOutBad(int nSignalNo)
 {
 	int tmpResult = pMainFrm->valueByKickMode(iCard, bCheckResult[iCamera]);
+    res.camNO = iCamera;
+    res.imgNO = nSignalNo;
+    pMainFrm->m_bCombine.AddResult(nSignalNo, iCamera, res);
 	pMainFrm->CountDefectIOCard(iCamera, nSignalNo, tmpResult);
 }
 void DetectThread::CountDefectIOCard(int nSignalNo,int tmpResult)

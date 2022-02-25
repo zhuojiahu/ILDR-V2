@@ -6,8 +6,9 @@
 #include <QDialog>
 
 #include "stateTool.h"
-#include "CombineResult.h"
 #include "ConfigInfo.h"
+#include "CombineResult.h"
+#include "BottleResultCombine.h"
 #include "myQueue.h"
 #include "DetectThread.h"
 #include "CIOCard.h"
@@ -36,8 +37,7 @@ class QTimer;
 class QTcpSocket;
 class QTcpServer;
 class WidgetTitle;
-class WidgetCarveSetting;
-class WidgetCarveSetting;
+class UIOperation;
 class WidgetManagement;
 class WidgetTest;
 class Widget_PLC1;
@@ -82,6 +82,7 @@ public:
 	static DWORD WINAPI SendIOCard(void*);
 	static DWORD WINAPI DataCountThread(void*);*/
     void CountDefectIOCard(int iCamera, int ImageNumber, int tmpResult);
+    void CombineBottle(int iCamera, int ImageNumber, int tmpResult, bool CompensateKick = false);
     bool isLock()const;
     bool checkLock();
 signals:
@@ -99,7 +100,7 @@ signals:
     //设置状态
     void signals_setNaviLockSt(bool);
     //更新结果和统计数据
-    void signals_updateResult(int _nImgNO, QString _id, QDateTime _dt, QString _cavityNum, QDateTime _gmtTime);
+    void signals_updateResult(BottleResult res);
     void signals_updateCount(int total, int reject, int read, int intime, int engraved);
     //用于重置当前界面统计数据
     void signals_resetCurrent();
@@ -166,7 +167,7 @@ public:
     //子窗体界面
 	WidgetTitle *title_widget;				//标题栏 
 
-    WidgetCarveSetting *widget_operation;   //操作界面
+    UIOperation *widget_operation;   //操作界面
     QWidget *widget_alg;                    //算法设置页面
 	WidgetManagement *widget_article;       //模板设置
     WidgetTest *widget_settings;                //系统设置页面
@@ -214,6 +215,7 @@ public:
 
 	//图像综合相关参数
     CCombineRlt* m_cCombine[IOCard_MAX_COUNT];
+    CBottleRltCombine m_bCombine;
 	QVector<QRgb> m_vcolorTable;				//生成灰度颜色表
 	//算法使用的检测列表
 	s_InputCheckerAry CherkerAry;
@@ -234,6 +236,7 @@ public:
     QTimer *timerUpdateCoder;   //用于更新界面统计数据
     QTimer *nConnectTimer;      //用于定时连接服务器
     QTimer *timerSaveCount;     //用于定时保存统计数据
+    
 public:
 	//TemporaryData LastTimeData;
 	ImageSave m_SavePicture[CAMERA_MAX_COUNT];

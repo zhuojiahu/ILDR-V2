@@ -4,6 +4,7 @@
 #pragma once
 //#include <QList>
 #include <QTime>
+#include <QSet>
 #include <QStringList>
 
 #include "common.h"
@@ -312,6 +313,14 @@ typedef struct _SystemInfo
 	int iReadMouldIDCamNo ;  //读取模号的相机号 默认是8号相机
 	int iMaxReadMouldIDCount; //最大读模数
 
+    bool bKickReadFailed;   //是否剔废识别失败的瓶子
+    bool bKickMarked;       //是否剔废标记项
+    QSet<QString> markedID;     //标记剔废的ID列表
+    QSet<QString> markedCavity; //标记剔废的瓶子来源产线
+
+    QStringList idlist;         //设备生产的ID列表
+    QStringList cavityList;     //设备过瓶的来源产线列表
+
 	QString i_IP1;
 	QString i_IP2;
     
@@ -366,6 +375,8 @@ typedef struct _SystemInfo
 			m_iNoRejectIfROIfail[i] = 0;
 			m_iNoStaticIfNoOrigin[i] = 0;
 		}
+
+        bKickReadFailed = false;
 	}
 }s_SystemInfo;
 
@@ -426,6 +437,14 @@ typedef struct _RunningInfo
 	int m_GSoap_Last_failureNumFromIOcard;//用于保存上一次踢废计数
 	int m_GSoap_Last_checkedNum;//用于保存上一次检测总数
 
+    //当前统计
+    int nTotalBot;  //过瓶总数
+    int nRejectBot; //剔废数
+    int nRead;      //成功识别数
+    int nInTime;    //及时识别数
+    int nOverTime;  //超时个数 使用接口卡补踢计数统计
+    int nEngraved;  //???
+
 	_RunningInfo()
 	{
 		nGSOAP_PassCount = 0;//阴同添加
@@ -474,6 +493,12 @@ typedef struct _RunningInfo
 		m_eSaveImageType = NotSave;
 
 		strSpeed = "0";
+
+        nTotalBot = 0; 
+        nRejectBot = 0;
+        nRead = 0;     
+        nInTime = 0;   
+        nEngraved = 0; 
 	}
 
 }s_RunningInfo;
@@ -510,5 +535,40 @@ typedef struct _RuntimeInfo
 	QStringList AlarmsInfo;
 
 }s_RuntimeInfo;
+
+class BottleResult
+{
+public:
+    BottleResult()
+    {
+        imgNO = -1;
+        reset();
+    }
+    void reset()
+    {
+        idLine = "";
+        cavityNum = -1;
+        rate = 0;
+        camNO = -1;
+    }
+    bool operator==(const BottleResult& t)const{
+        return idLine == t.idLine &&
+            dtStamp == t.dtStamp &&
+            cavityNum == t.cavityNum;
+    }
+
+    bool isHigher(const BottleResult& t)const{
+        return rate > t.rate;
+    }
+
+    int imgNO;              //瓶子对应的图像号
+    int camNO;              //结果对应的相机ID
+    int rate;               //算法得出的准确率 越大则越可信,综合使用此值来判定是否采用
+    //码中信息
+    QString idLine;         //ID 失败则为空
+    QDateTime dtStamp;      //时间戳
+    QString cavityNum;          //线体编号
+
+};
 
 #endif // COMMON_H

@@ -415,6 +415,18 @@
     <ClCompile Include="GeneratedFiles\Release\moc_cpassworddlg.cpp">
       <Filter>Header Files\Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="BottleResultCombine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OptButtonGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_OptButtonGroup.cpp">
+      <Filter>Header Files\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_OptButtonGroup.cpp">
+      <Filter>Header Files\Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="image_widget.ui">
@@ -609,6 +621,9 @@
     <CustomBuild Include="cpassworddlg.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="OptButtonGroup.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_Widget_userManege.h">
@@ -634,6 +649,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_cpassworddlg.h">
       <Filter>Header Files\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BottleResultCombine.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

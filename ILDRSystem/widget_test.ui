@@ -50,8 +50,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1789</width>
-        <height>920</height>
+        <width>1772</width>
+        <height>1282</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,1">
@@ -85,6 +85,23 @@
                </widget>
               </item>
               <item>
+               <widget class="QSpinBox" name="spinBox_LoginHoldTime">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="value">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_minute_3">
+                <property name="text">
+                 <string>Min</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QPushButton" name="btnSaveLoginHoldTime">
                 <property name="text">
                  <string>Save</string>
@@ -92,19 +109,9 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_minute_3">
+               <widget class="QLabel" name="label_LoginHoldTime_2">
                 <property name="text">
-                 <string>Minute:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="spinBox_LoginHoldTime">
-                <property name="minimum">
-                 <number>1</number>
-                </property>
-                <property name="value">
-                 <number>1</number>
+                 <string>Image Refresh Mode:</string>
                 </property>
                </widget>
               </item>
@@ -132,6 +139,203 @@
                </spacer>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="gbxKickParams">
+              <property name="title">
+               <string>Kick Params</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <item>
+                <widget class="QCheckBox" name="cbtnKickFailed">
+                 <property name="text">
+                  <string>Kick when read failed</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <item>
+                  <widget class="QCheckBox" name="cbtnKickMark">
+                   <property name="text">
+                    <string>Kick Marked</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_8">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="cbtnManageList">
+                   <property name="toolTip">
+                    <string>manage mode:click delete button to delete checed items</string>
+                   </property>
+                   <property name="statusTip">
+                    <string/>
+                   </property>
+                   <property name="whatsThis">
+                    <string/>
+                   </property>
+                   <property name="text">
+                    <string>Manage List</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="gbxMarkIDs">
+                 <property name="title">
+                  <string>Marked ID for Kick</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <item>
+                   <layout class="QGridLayout" name="glayMardIDs"/>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_4">
+                    <item>
+                     <spacer name="horizontalSpacer_6">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="ledtID">
+                      <property name="maximumSize">
+                       <size>
+                        <width>40</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnIDAdd">
+                      <property name="text">
+                       <string>Add</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnMarkIDInvSel">
+                      <property name="text">
+                       <string>Invert Select</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnMarkIDSelAll">
+                      <property name="text">
+                       <string>Select All</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnMarkIDSelNO">
+                      <property name="text">
+                       <string>Select NO</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="gbxMarkCavity">
+                 <property name="title">
+                  <string>Marked Cavity for Kick</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                  <item>
+                   <layout class="QGridLayout" name="glayMarkedCavity"/>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_6">
+                    <item>
+                     <spacer name="horizontalSpacer_7">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="ledtCavity">
+                      <property name="maximumSize">
+                       <size>
+                        <width>40</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnCaviAdd">
+                      <property name="text">
+                       <string>Add</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnMarkCaviInvSel">
+                      <property name="text">
+                       <string>Invert Select</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnMarkCaviSelAll">
+                      <property name="text">
+                       <string>Select All</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="btnMarkCaviSelNO">
+                      <property name="text">
+                       <string>Select NO</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnSaveKickParam">
+                 <property name="text">
+                  <string>Save Kick Params</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -1767,8 +1971,8 @@ background:#FFFFFF;
    <slot>slots_Cancel()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>485</x>
-     <y>380</y>
+     <x>558</x>
+     <y>1271</y>
     </hint>
     <hint type="destinationlabel">
      <x>892</x>
